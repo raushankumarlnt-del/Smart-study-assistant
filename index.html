@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartStudy AI · Emerging Tech Assistant</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Background Glow Accents -->
+  <div class="bg-glow top-left"></div>
+  <div class="bg-glow bottom-right"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <span class="brand-badge">B.Tech 1st Year · Emerging Tech</span>
+        <h1>SmartStudy <span>AI</span></h1>
+        <p>Your intelligent academic copilot for summarizing notes, testing concepts & conquering deadlines.</p>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="tab-btn active" data-tab="summarizer">
+          <span class="icon">⚡</span> Notes Summarizer
+        </button>
+        <button class="tab-btn" data-tab="quiz">
+          <span class="icon">🎯</span> Quiz Generator
+        </button>
+        <button class="tab-btn" data-tab="planner">
+          <span class="icon">📅</span> Study Planner
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Content Tabs -->
+    <main class="main-content">
+      
+      <!-- TAB 1: NOTES SUMMARIZER -->
+      <section id="summarizer" class="tab-panel active">
+        <div class="grid-2col">
+          <!-- Input Card -->
+          <div class="glass-card">
+            <div class="card-header">
+              <h3>Input Notes</h3>
+              <button id="load-sample-btn" class="ghost-btn">Load Sample Topic</button>
+            </div>
+            <textarea id="notes-input" placeholder="Paste your lengthy textbook paragraphs, professor's lecture transcripts, or PDF notes here..."></textarea>
+            
+            <div class="controls-row">
+              <div class="control-group">
+                <label for="summary-length">Output Density:</label>
+                <select id="summary-length">
+                  <option value="short">Key Highlights (30%)</option>
+                  <option value="medium" selected>Balanced Breakdown (50%)</option>
+                  <option value="detailed">Comprehensive Digest (70%)</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="summary-format">Format:</label>
+                <select id="summary-format">
+                  <option value="bullets" selected>Bullet Points</option>
+                  <option value="paragraph">Cohesive Paragraph</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="action-footer">
+              <span id="input-stats" class="stats-text">0 words · 0 chars</span>
+              <button id="summarize-btn" class="primary-btn">
+                <span>Summarize Notes</span> ➔
+              </button>
+            </div>
+          </div>
+
+          <!-- Output Card -->
+          <div class="glass-card">
+            <div class="card-header">
+              <h3>AI Digest</h3>
+              <div class="card-actions">
+                <button id="copy-summary-btn" class="icon-btn" title="Copy to clipboard">📋 Copy</button>
+                <button id="send-to-quiz-btn" class="icon-btn highlight" title="Make Quiz from this">Generate Quiz 🎯</button>
+              </div>
+            </div>
+            
+            <div id="summary-output" class="output-box placeholder">
+              <p>Your distilled smart summary, key formulas, and exam takeaways will appear here once generated.</p>
+            </div>
+
+            <div class="output-stats-bar">
+              <div class="stat-pill"><span id="reduced-stat">0%</span> Reduced</div>
+              <div class="stat-pill"><span id="reading-time-stat">0 min</span> Read Time</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: QUIZ GENERATOR -->
+      <section id="quiz" class="tab-panel">
+        <div class="glass-card full-width">
+          <div class="card-header">
+            <div>
+              <h3>Interactive Self-Quizzer</h3>
+              <p class="subtitle">Extracts knowledge checks directly from your pasted notes or pre-loaded ET syllabus modules.</p>
+            </div>
+            <div class="quiz-controls">
+              <button id="load-sample-quiz-btn" class="ghost-btn">Load ET Syllabus Quiz</button>
+              <button id="build-quiz-btn" class="primary-btn">Build From Notes ⚡</button>
+            </div>
+          </div>
+
+          <!-- Quiz Meta / Score Bar -->
+          <div id="quiz-meta" class="quiz-meta-bar hidden">
+            <div class="score-display">Score: <span id="current-score">0</span> / <span id="total-questions">0</span></div>
+            <div class="progress-track"><div id="quiz-progress-bar" class="progress-fill"></div></div>
+          </div>
+
+          <!-- Question Stage -->
+          <div id="quiz-container" class="quiz-container">
+            <div class="empty-quiz-state">
+              <span class="big-emoji">💡</span>
+              <h4>No Quiz Active</h4>
+              <p>Paste notes in the Summarizer tab and click <b>Generate Quiz</b>, or hit <b>Load ET Syllabus Quiz</b> above to test your fundamental concepts.</p>
+            </div>
+          </div>
+
+          <!-- Quiz Result Modal / Banner -->
+          <div id="quiz-result" class="quiz-result-banner hidden">
+            <h4>Quiz Completed! 🎉</h4>
+            <p id="quiz-final-text">Great performance! You mastered this session.</p>
+            <button id="retry-quiz-btn" class="primary-btn">Retry Quiz</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: STUDY PLANNER -->
+      <section id="planner" class="tab-panel">
+        <div class="grid-2col">
+          <!-- Add Task Form -->
+          <div class="glass-card">
+            <div class="card-header">
+              <h3>Add Study Goal</h3>
+              <span class="badge">Auto-Saved</span>
+            </div>
+
+            <form id="task-form">
+              <div class="input-field">
+                <label for="task-title">Task or Assignment Title</label>
+                <input type="text" id="task-title" placeholder="e.g. Unit 2: Artificial Neural Networks Revision" required>
+              </div>
+
+              <div class="input-field">
+                <label for="task-subject">Course / Module</label>
+                <input type="text" id="task-subject" placeholder="e.g. Emerging Technology, C / DSA" required>
+              </div>
+
+              <div class="controls-row">
+                <div class="control-group">
+                  <label for="task-priority">Priority</label>
+                  <select id="task-priority">
+                    <option value="high">🔴 High (Exam Near)</option>
+                    <option value="medium" selected>🟡 Medium</option>
+                    <option value="low">🟢 Low (Backlog)</option>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <label for="task-deadline">Target Deadline</label>
+                  <input type="date" id="task-deadline" required>
+                </div>
+              </div>
+
+              <button type="submit" class="primary-btn full-btn">+ Add Goal to Tracker</button>
+            </form>
+          </div>
+
+          <!-- Task Management Board -->
+          <div class="glass-card">
+            <div class="card-header">
+              <h3>Task Pipeline</h3>
+              <div class="filter-pills">
+                <button class="filter-pill active" data-filter="all">All</button>
+                <button class="filter-pill" data-filter="pending">Pending</button>
+                <button class="filter-pill" data-filter="done">Completed</button>
+              </div>
+            </div>
+
+            <div class="progress-overview">
+              <div class="progress-label">
+                <span>Semester Completion</span>
+                <span id="completion-percentage">0%</span>
+              </div>
+              <div class="progress-track">
+                <div id="tasks-progress-bar" class="progress-fill"></div>
+              </div>
+            </div>
+
+            <ul id="task-list" class="task-list">
+              <!-- Dynamically populated tasks -->
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Crafted for B.Tech CSE / AI & Data Science 1st Year · Emerging Technology Innovation Lab</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
